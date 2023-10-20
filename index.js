@@ -27,12 +27,19 @@ async function run() {
      
      const productCollection = client.db('productDB').collection('product')
 
-     app.post('/products', async (req, res) => {
+      app.post('/products', async (req, res) => {
         const newProduct = req.body;
         console.log(newProduct);
         const result = await productCollection.insertOne(newProduct);
         res.send(result);
-     })
+      })
+     
+      app.get('/products/brand/:brandName', async (req, res) => {
+         const brandName = req.params.brandName;
+         const query = { brandName: brandName };
+         const products = await productCollection.find(query).toArray();
+         res.json(products);
+       });       
    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
